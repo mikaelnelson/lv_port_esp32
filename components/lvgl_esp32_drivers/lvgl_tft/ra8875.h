@@ -76,6 +76,10 @@ extern "C" {
 #define RA8875_REG_PLLC1  (0x88)     // PLL Control Register 1 (PLLC1)
 #define RA8875_REG_PLLC2  (0x89)     // PLL Control Register 2 (PLLC2)
 
+// PWM Registers
+#define RA8875_REG_P1CR   (0x8A)
+#define RA8875_REG_P1DCR  (0x8B)
+
 // Memory Clear Register
 #define RA8875_REG_MCLR   (0x8E)     // Memory Clear Control Register (MCLR)
 
