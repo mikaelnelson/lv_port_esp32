@@ -83,6 +83,9 @@ extern "C" {
 // Memory Clear Register
 #define RA8875_REG_MCLR   (0x8E)     // Memory Clear Control Register (MCLR)
 
+// GPIOx Registers
+#define RA8875_REG_GPIOX  (0xC7)	 // Extra Generap Purpose IO Register (GPIOX)
+
 // Interrupt Control Registers
 #define RA8875_REG_INTC1  (0xF0)     // Interrupt Control Register1 (INTC1)
 #define RA8875_REG_INTC2  (0xF1)     // Interrupt Control Register1 (INTC2)
