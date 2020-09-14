@@ -161,30 +161,17 @@ void ra8875_init(void)
 		{RA8875_REG_MCLR, 0x80},
 		{RA8875_REG_PWRR, 0x80},
 
-		// Enable Backlight
+		// Setup Backlight, Initialize To Off
 		{RA8875_REG_GPIOX, 0x01},
-		{RA8875_REG_P1CR, 0x8A},
-		{RA8875_REG_P1DCR, 0xFF},
+		{RA8875_REG_P1CR, 0x0A},
+		{RA8875_REG_P1DCR, 0x00},
     };
     #define INIT_CMDS_SIZE (sizeof(init_cmds)/sizeof(init_cmds[0]))
 
     ESP_LOGI(TAG, "Initializing RA8875...");
 
-#if (CONFIG_LVGL_DISP_PIN_BCKL == 15)
-    gpio_config_t io_conf;
-    io_conf.intr_type = GPIO_PIN_INTR_DISABLE;
-    io_conf.mode = GPIO_MODE_OUTPUT;
-    io_conf.pin_bit_mask = GPIO_SEL_15;
-    io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
-    io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
-    gpio_config(&io_conf);
-#endif
-
     // Initialize non-SPI GPIOs
     gpio_set_direction(RA8875_RST, GPIO_MODE_OUTPUT);
-#ifdef CONFIG_LVGL_DISP_PIN_BCKL
-    gpio_set_direction(CONFIG_LVGL_DISP_PIN_BCKL, GPIO_MODE_OUTPUT);
-#endif
 
     // Reset the RA8875
     gpio_set_level(RA8875_RST, 0);
@@ -216,24 +203,23 @@ void ra8875_init(void)
 
     // Enable the display and backlight
     ra8875_enable_display(true);
-    ra8875_enable_backlight(true);
+    ra8875_enable_backlight(0);
 }
 
-void ra8875_enable_backlight(bool backlight)
+void ra8875_enable_backlight(uint8_t level)
 {
 #if CONFIG_LVGL_ENABLE_BACKLIGHT_CONTROL
-    ESP_LOGI(TAG, "%s backlight.", backlight ? "Enabling" : "Disabling");
-    uint32_t tmp = 0;
 
-    #if CONFIG_LVGL_BACKLIGHT_ACTIVE_LVL
-        tmp = backlight ? 1 : 0;
-    #else
-        tmp = backlight ? 0 : 1;
-    #endif
-
-#ifdef CONFIG_LVGL_DISP_PIN_BCKL
-    gpio_set_level(CONFIG_LVGL_DISP_PIN_BCKL, tmp);
-#endif
+    if( 0x00 == level )
+    {
+        ra8875_write_cmd(RA8875_REG_P1CR, 0x0A);
+        ra8875_write_cmd(RA8875_REG_P1DCR, level);
+    }
+    else
+    {
+        ra8875_write_cmd(RA8875_REG_P1CR, 0x8A);
+        ra8875_write_cmd(RA8875_REG_P1DCR, level);
+    }
 
 #endif
 }
