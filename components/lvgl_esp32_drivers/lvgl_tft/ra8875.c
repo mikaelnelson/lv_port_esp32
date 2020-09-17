@@ -163,7 +163,7 @@ void ra8875_init(void)
 
 		// Setup Backlight, Initialize To Off
 		{RA8875_REG_GPIOX, 0x01},
-		{RA8875_REG_P1CR, 0x0A},
+		{RA8875_REG_P1CR, 0x0B},
 		{RA8875_REG_P1DCR, 0x00},
     };
     #define INIT_CMDS_SIZE (sizeof(init_cmds)/sizeof(init_cmds[0]))
@@ -208,20 +208,16 @@ void ra8875_init(void)
 
 void ra8875_enable_backlight(uint8_t level)
 {
-#if CONFIG_LVGL_ENABLE_BACKLIGHT_CONTROL
-
     if( 0x00 == level )
     {
-        ra8875_write_cmd(RA8875_REG_P1CR, 0x0A);
+        ra8875_write_cmd(RA8875_REG_P1CR, 0x0B);
         ra8875_write_cmd(RA8875_REG_P1DCR, level);
     }
     else
     {
-        ra8875_write_cmd(RA8875_REG_P1CR, 0x8A);
+        ra8875_write_cmd(RA8875_REG_P1CR, 0x8B);
         ra8875_write_cmd(RA8875_REG_P1DCR, level);
     }
-
-#endif
 }
 
 void ra8875_enable_display(bool enable)
